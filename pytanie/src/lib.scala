@@ -40,7 +40,7 @@ class PreparedQuery[T](
       case Left(value) => throw RuntimeException(value)
       case Right(value) =>
         val content = ujson.read(value)
-        println(content.obj.get("errors"))
+        println(content.render(indent = 2))
         content.obj.get("data") match
           case Some(data) =>
             RootResult(data, query, url, username, token, injectedVars, params)
