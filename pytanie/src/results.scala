@@ -16,6 +16,7 @@ trait Result extends Selectable:
     val fragment = """as(\w+)""".r
     name match
       case fragment(typ) =>
+        println(s"Data: $data")
         if data("__typename").str == typ then
           val fragment = model.getFragment(typ)
           Some(FragmentResult(data, fragment, this))
