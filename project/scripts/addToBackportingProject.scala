@@ -26,6 +26,13 @@ def getPrData(commitSha: String): (ID, String) =
     |    object(expression: "ace504e451b5a2f9f34da47f1cdb084162ffd9bf") {
     |      __typename
     |      ... on Commit {
+    |        associatedPullRequests(first: 1) {
+    |          nodes {
+    |            number
+    |            id
+    |            mergedAt
+    |          }
+    |        }
     |        parents(first: 2) {
     |          nodes {
     |            associatedPullRequests(first: 1) {
