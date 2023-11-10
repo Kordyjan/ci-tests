@@ -31,6 +31,7 @@ trait Result extends Selectable:
             PaginatedResult(value, field, this)
           case Null =>
             println(s"Null value for $name")
+            println(data)
             null
           case value => FieldResult(value, field, this)
 end Result
