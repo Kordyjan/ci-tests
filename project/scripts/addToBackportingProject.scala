@@ -22,15 +22,19 @@ case class ID(value: String) derives WrapperVariable
 def getPrData(commitSha: String): (ID, String) =
   val res = query"""
     |query prForCommit {
-    |  repository(owner:"lampepfl", name:"dotty") {
-    |    object(expression: $commitSha){
+    |  repository(owner: "Kordyjan", name: "ci-tests") {
+    |    object(expression: "ace504e451b5a2f9f34da47f1cdb084162ffd9bf") {
     |      __typename
     |      ... on Commit {
-    |        associatedPullRequests(first: 1) {
+    |        parents(first: 2) {
     |          nodes {
-    |            number
-    |            id
-    |            mergedAt
+    |            associatedPullRequests(first: 1) {
+    |              nodes {
+    |                number
+    |                id
+    |                mergedAt
+    |              }
+    |            }
     |          }
     |        }
     |      }
@@ -42,7 +46,7 @@ def getPrData(commitSha: String): (ID, String) =
       "DummyUser",
       apiToken
     )
-  val pr = res.repository.`object`.asCommit.get.associatedPullRequests.nodes.head
+  val pr = res.repository.`object`.asCommit.get.parents.nodes(1).associatedPullRequests.nodes.head
   (ID(pr.id), pr.mergedAt)
 
 // def timestampItem(id: ID, date: String) =
