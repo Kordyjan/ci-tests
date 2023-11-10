@@ -29,6 +29,9 @@ trait Result extends Selectable:
           case value
               if isPaginated(field.setFlattened, field.argumentsFlattened) =>
             PaginatedResult(value, field, this)
+          case Null =>
+            println(s"Null value for $name")
+            null
           case value => FieldResult(value, field, this)
 end Result
 
