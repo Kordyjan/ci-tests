@@ -14,16 +14,16 @@ case class ID(value: String) derives WrapperVariable
 // val FIELD_ID = ID("PVTF_lADOACj3ec4AWSoizgO7uJ4")
 
 @main def run(commitSha: String) =
-  val (id, date) = getPrData(commitSha)
-  println((id, date))
+  val ans = getPrData(commitSha)
+  println(ans)
   // val newId = addItem(id)
   // timestampItem(newId, date)
 
-def getPrData(commitSha: String): (ID, String) =
+def getPrData(commitSha: String): String =
   val res = query"""
     |query prForCommit {
     |  repository(owner: "Kordyjan", name: "ci-tests") {
-    |    object(expression: "ace504e451b5a2f9f34da47f1cdb084162ffd9bf") {
+    |    object(expression: $commitSha) {
     |      __typename
     |      ... on Commit {
     |        associatedPullRequests(first: 1) {
@@ -54,7 +54,12 @@ def getPrData(commitSha: String): (ID, String) =
       apiToken
     )
   val pr = res.repository.`object`.asCommit.get.parents.nodes(1).associatedPullRequests.nodes.head
-  (ID(pr.id), pr.mergedAt)
+  val oldPR = res.repository.`object`.asCommit.get.associatedPullRequests.nodes.head
+  val data = Option(pr).map:
+    p => (p.number, p.id)
+  val oldData = Option(oldPR).map:
+    p => (p.number, p.id)
+  s"PR: $data, oldPR: $oldData"
 
 // def timestampItem(id: ID, date: String) =
 //   query"""
